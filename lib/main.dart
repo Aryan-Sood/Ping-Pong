@@ -14,7 +14,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Ping Pong',
-      home: Home(),
+      home: Scaffold(
+        body: Home(),
+      ),
       routes: {
         '/game': (context) => GameScreen(),
       },

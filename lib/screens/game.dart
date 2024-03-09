@@ -11,8 +11,8 @@ class _GameScreenState extends State<GameScreen>
     with SingleTickerProviderStateMixin {
   late double centerX;
   late double centerY;
-  double dx = 4; // Horizontal speed
-  double dy = 4; // Vertical speed
+  double dx = 12; // Horizontal speed
+  double dy = 12; // Vertical speed
 
   bool started = false;
 
@@ -57,31 +57,40 @@ class _GameScreenState extends State<GameScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Color.fromRGBO(94, 174, 174, 1),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            started
-                ? CustomPaint(
-                    painter: BallPainter(centerX, centerY),
-                    size: Size(double.infinity, double.infinity),
-                  )
-                : AnimatedBuilder(
-                    animation: _animationController,
-                    builder: (context, child) {
-                      return Opacity(
-                        opacity: _animationController.value,
-                        child: const Text("Touch to Play",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20)),
-                      );
-                    },
-                  ),
-          ],
+      body: GestureDetector(
+        onTap: () {
+          setState(() {
+            started = true;
+          });
+        },
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Color.fromRGBO(94, 174, 174, 1),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              started
+                  ? Flexible(
+                      child: CustomPaint(
+                        painter: BallPainter(centerX, centerY),
+                        size: Size(double.infinity, double.infinity),
+                      ),
+                    )
+                  : AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (context, child) {
+                        return Opacity(
+                          opacity: _animationController.value,
+                          child: const Text("Touch to Play",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20)),
+                        );
+                      },
+                    ),
+            ],
+          ),
         ),
       ),
     );
