@@ -1,4 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:ping_pong/manager/ball_painter.dart';
+import 'package:ping_pong/manager/slider_painter.dart';
 import 'package:ping_pong/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -75,10 +79,28 @@ class _GameScreenState extends State<GameScreen>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               started
-                  ? Flexible(
-                      child: CustomPaint(
-                        painter: BallPainter(centerX, centerY, color),
-                        size: Size(double.infinity, double.infinity),
+                  ? Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: CustomPaint(
+                                  painter: BallPainter(centerX, centerY, color),
+                                  size: Size(double.infinity, double.infinity),
+                                ),
+                              ),
+                              Expanded(
+                                child: CustomPaint(
+                                  painter: SliderPainter(),
+                                  size: Size(double.infinity, double.infinity),
+                                ),
+                              )
+                            ],
+                          )
+                        ],
                       ),
                     )
                   : AnimatedBuilder(
@@ -103,40 +125,5 @@ class _GameScreenState extends State<GameScreen>
   void dispose() {
     _animationController.dispose();
     super.dispose();
-  }
-}
-
-class BallPainter extends CustomPainter {
-  final double ballX;
-  final double ballY;
-  final String color;
-
-  BallPainter(this.ballX, this.ballY, this.color);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    String fixedColor = color;
-    Color ballColor = Colors.red;
-    switch (fixedColor) {
-      case 'Red':
-        ballColor = Colors.red;
-        break;
-      case 'Blue':
-        ballColor = Colors.blue;
-        break;
-      case 'Green':
-        ballColor = Colors.green;
-        break;
-      case 'Orange':
-        ballColor = Colors.orange;
-        break;
-    }
-    Paint paint = Paint()..color = ballColor;
-    canvas.drawCircle(Offset(ballX, ballY), 20, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
   }
 }
