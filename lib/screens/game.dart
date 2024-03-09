@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ping_pong/providers/color_provider.dart';
+import 'package:provider/provider.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -25,7 +27,7 @@ class _GameScreenState extends State<GameScreen>
       vsync: this,
       duration: Duration(milliseconds: 1300),
     )..repeat(reverse: true);
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         centerX = MediaQuery.of(context).size.width / 2;
         centerY = MediaQuery.of(context).size.height / 2;
@@ -35,7 +37,7 @@ class _GameScreenState extends State<GameScreen>
   }
 
   void startGameLoop() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         centerX += dx;
         centerY += dy;
@@ -56,6 +58,7 @@ class _GameScreenState extends State<GameScreen>
 
   @override
   Widget build(BuildContext context) {
+    String color = Provider.of<ColorProvider>(context).getColor();
     return Scaffold(
       body: GestureDetector(
         onTap: () {
@@ -74,7 +77,7 @@ class _GameScreenState extends State<GameScreen>
               started
                   ? Flexible(
                       child: CustomPaint(
-                        painter: BallPainter(centerX, centerY),
+                        painter: BallPainter(centerX, centerY, color),
                         size: Size(double.infinity, double.infinity),
                       ),
                     )
@@ -106,12 +109,29 @@ class _GameScreenState extends State<GameScreen>
 class BallPainter extends CustomPainter {
   final double ballX;
   final double ballY;
+  final String color;
 
-  BallPainter(this.ballX, this.ballY);
+  BallPainter(this.ballX, this.ballY, this.color);
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()..color = Colors.red;
+    String fixedColor = color;
+    Color ballColor = Colors.red;
+    switch (fixedColor) {
+      case 'Red':
+        ballColor = Colors.red;
+        break;
+      case 'Blue':
+        ballColor = Colors.blue;
+        break;
+      case 'Green':
+        ballColor = Colors.green;
+        break;
+      case 'Orange':
+        ballColor = Colors.orange;
+        break;
+    }
+    Paint paint = Paint()..color = ballColor;
     canvas.drawCircle(Offset(ballX, ballY), 20, paint);
   }
 
