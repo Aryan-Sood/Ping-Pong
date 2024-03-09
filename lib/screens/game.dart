@@ -14,6 +14,8 @@ class _GameScreenState extends State<GameScreen>
   double dx = 4; // Horizontal speed
   double dy = 4; // Vertical speed
 
+  bool started = false;
+
   late AnimationController _animationController;
 
   @override
@@ -63,21 +65,22 @@ class _GameScreenState extends State<GameScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CustomPaint(
-              painter: BallPainter(centerX, centerY),
-              size: Size.infinite,
-              child: AnimatedBuilder(
-                animation: _animationController,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: _animationController.value,
-                    child: const Text("Touch to Play",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20)),
-                  );
-                },
-              ),
-            ),
+            started
+                ? CustomPaint(
+                    painter: BallPainter(centerX, centerY),
+                    size: Size(double.infinity, double.infinity),
+                  )
+                : AnimatedBuilder(
+                    animation: _animationController,
+                    builder: (context, child) {
+                      return Opacity(
+                        opacity: _animationController.value,
+                        child: const Text("Touch to Play",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20)),
+                      );
+                    },
+                  ),
           ],
         ),
       ),
