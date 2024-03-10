@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:ping_pong/manager/ball_painter.dart';
-import 'package:ping_pong/manager/slider_painter.dart';
 import 'package:ping_pong/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +26,7 @@ class _GameScreenState extends State<GameScreen>
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1300),
+      duration: const Duration(milliseconds: 1300),
     )..repeat(reverse: true);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
@@ -73,34 +70,17 @@ class _GameScreenState extends State<GameScreen>
         child: Container(
           width: double.infinity,
           height: double.infinity,
-          color: Color.fromRGBO(94, 174, 174, 1),
+          color: const Color.fromRGBO(94, 174, 174, 1),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               started
-                  ? Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: CustomPaint(
-                                  painter: BallPainter(centerX, centerY, color),
-                                  size: Size(double.infinity, double.infinity),
-                                ),
-                              ),
-                              Expanded(
-                                child: CustomPaint(
-                                  painter: SliderPainter(),
-                                  size: Size(double.infinity, double.infinity),
-                                ),
-                              )
-                            ],
-                          )
-                        ],
+                  ? CustomPaint(
+                      painter: BallPainter(centerX, centerY, color),
+                      size: Size(
+                        MediaQuery.of(context).size.width,
+                        MediaQuery.of(context).size.height,
                       ),
                     )
                   : AnimatedBuilder(
