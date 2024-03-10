@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:ping_pong/manager/ball_painter.dart';
+import 'package:ping_pong/manager/example_painter.dart';
+import 'package:ping_pong/manager/slider_painter.dart';
 import 'package:ping_pong/providers/color_provider.dart';
 import 'package:provider/provider.dart';
+import 'dart:ui' as ui;
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -71,31 +75,49 @@ class _GameScreenState extends State<GameScreen>
           width: double.infinity,
           height: double.infinity,
           color: const Color.fromRGBO(94, 174, 174, 1),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              started
-                  ? CustomPaint(
-                      painter: BallPainter(centerX, centerY, color),
-                      size: Size(
-                        MediaQuery.of(context).size.width,
-                        MediaQuery.of(context).size.height,
+          child: Stack(fit: StackFit.expand, children: [
+            if (started)
+              Container(
+                color: Colors.transparent,
+                child: CustomPaint(
+                  painter: BallPainter(centerX, centerY, color),
+                  size: Size(
+                    MediaQuery.of(context).size.width,
+                    MediaQuery.of(context).size.height,
+                  ),
+                ),
+              ),
+            Container(
+              color: Colors.transparent,
+              child: CustomPaint(
+                painter: SliderPainter(context),
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (!started)
+                  BackdropFilter(
+                    filter: ui.ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    child: Container(
+                      color: Colors.transparent,
+                      child: AnimatedBuilder(
+                        animation: _animationController,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: _animationController.value,
+                            child: const Text("Touch to Play",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 20)),
+                          );
+                        },
                       ),
-                    )
-                  : AnimatedBuilder(
-                      animation: _animationController,
-                      builder: (context, child) {
-                        return Opacity(
-                          opacity: _animationController.value,
-                          child: const Text("Touch to Play",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20)),
-                        );
-                      },
                     ),
-            ],
-          ),
+                  ),
+              ],
+            ),
+          ]),
         ),
       ),
     );
